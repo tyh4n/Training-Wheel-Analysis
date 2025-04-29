@@ -1,0 +1,50 @@
+%% Init
+max_tilt = 15;      % [degree] 
+max_wid = 10;       % [in]
+
+%% Distance to center vs. ground clearance
+d_2_center = linspace(0, max_wid); % Distance to center in inches
+ground_clearance_in = d_2_center * tand(max_tilt); % Ground clearance in inches
+
+% Create the primary plot (inches)
+figure('Position', [100, 100, 800, 600]); % [left, bottom, width, height]
+plot(d_2_center, ground_clearance_in, 'b-');
+grid on;
+xlabel('Distance to center [in]');
+ylabel('Ground clearance [in]');
+
+% Add a secondary x-axis for millimeters
+ax1 = gca; % Get the current axis
+ax2 = axes('Position', ax1.Position, 'XAxisLocation', 'top', 'Color', 'none'); % Create a secondary axis
+ax2.XLim = ax1.XLim * 25.4; % Convert inches to millimeters (1 inch = 25.4 mm)
+xlabel(ax2, 'Distance to center [mm]');
+
+% Align the secondary x-axis with the primary axis
+ax2.YLim = ax1.YLim;
+ax2.YTick = []; % Hide the y-axis ticks for the secondary axis
+
+% Add a secondary y-axis for millimeters on the right side
+yyaxis right; % Activate the right y-axis
+ax1_right = gca; % Get the right y-axis
+ax1_right.YLim = ax1.YLim * 25.4; % Convert inches to millimeters
+ylabel('Ground clearance [mm]');
+
+% Hide the right y-axis plot (no second curve)
+ax1_right.Color = 'none'; % Make the right y-axis transparent
+ax1_right.YColor = 'k'; % Set the color of the right y-axis labels
+
+% Set font size for tick labels
+set(ax1, 'FontSize', 16); % Set font size for primary axis tick labels
+set(ax2, 'FontSize', 16); % Set font size for secondary x-axis tick labels
+set(ax1_right, 'FontSize', 16); % Set font size for secondary y-axis tick labels
+
+
+%% Tilt vs. accel
+g = 9.81;  % [m/s]
+tilt = linspace(0, 20, 100);
+accel = g * tand(tilt);
+figure('Position', [100, 100, 800, 600]);
+plot(tilt, accel);
+grid on;
+xlabel('Distance to center [in]');
+ylabel('Ground clearance [in]');
