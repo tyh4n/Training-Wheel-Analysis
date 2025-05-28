@@ -1,0 +1,43 @@
+%% Linear Evaluation
+accel_time_arr = linspace(0.2, 5, 5);
+
+for i = 1:length(accel_time_arr)
+    accel_time = accel_time_arr(i);
+    % Run simulation
+    sim_out = sim('ballbot', 'StopTime', '10');  
+    
+    tout = sim_out.get('tout');
+    % Check if simulation ran to completion
+    if tout(end) < 10
+        disp('Simulation was interrupted!');
+    else
+        disp('Simulation completed normally.');
+    end
+
+    video_file_name = "test" + num2str(i);
+    smwritevideo("ballbot", video_file_name);
+end
+
+%% Binary Splitting Evaluation
+accel_time_l = 0;
+accel_time_r = 5;
+accel_time_m = (accel_time_l + accel_time_r) / 2;
+
+while ((accel_time_l - accel_time_m) > 0.1)
+    accel_time = accel_time_m;
+
+    sim_out = sim('ballbot', 'StopTime', '10');  
+    
+    tout = sim_out.get('tout');
+    % Check if simulation ran to completion
+    if tout(end) < 10
+        disp('Simulation was interrupted!');
+        accel_time_r = accel_time_m;
+    else
+        disp('Simulation completed normally.');
+        accel_time_l = accel_time_m;
+    end
+
+    accel_time_m = (accel_time_l + accel_time_r) / 2;
+end
+
