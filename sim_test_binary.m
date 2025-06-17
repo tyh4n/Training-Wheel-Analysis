@@ -1,26 +1,31 @@
 %% Init 
-r_ring_arr = linspace(0.25, 0.5, 5);     % Ring radius [m] 
-h_leg_arr = linspace(0.05, 0.1, 5);      % Leg distance from ground [m]
-v_crit = zeros(length(r_ring_arr), length(h_leg_arr));
+r_ring_arr = linspace(0.25, 0.4, 6);     % Ring radius [m] 
+h_leg_arr = linspace(0.05, 0.10, 6);      % Leg distance from ground [m]
+v_crit = zeros(length(h_leg_arr), length(r_ring_arr));
 
 %% Binary Splitting Evaluation
 for r_idx = 1 : length(r_ring_arr)
     for h_idx = 1 : length(h_leg_arr)
+        disp('Setup # ');
+        disp((r_idx - 1) * length(h_leg_arr) + h_idx);
+        disp('Percentage: ');
+        disp(((r_idx - 1) * length(h_leg_arr) + h_idx) / (length(h_leg_arr) * length(r_ring_arr)) * 100);
+
         r_ring = r_ring_arr(r_idx);
         h_leg = h_leg_arr(h_idx);
 
         accel_time_l = 0;
-        accel_time_r = 5;
+        accel_time_r = 7;
         accel_time_m = (accel_time_l + accel_time_r) / 2;
         
-        while (accel_time_r - accel_time_l) > 0.1
+        while (accel_time_r - accel_time_l) > 0.2
             accel_time = accel_time_m;
         
-            sim_out = sim('ballbot', 'StopTime', '10');  
+            sim_out = sim('ballbot', 'StopTime', '12');  
             
             tout = sim_out.get('tout');
             % Check if simulation ran to completion
-            if tout(end) < 10
+            if tout(end) < 12
                 disp('Simulation was interrupted!');
                 accel_time_r = accel_time_m;
             else
@@ -31,8 +36,8 @@ for r_idx = 1 : length(r_ring_arr)
             accel_time_m = (accel_time_l + accel_time_r) / 2;
         end
         
-        idx = find(abs(sim_out.v_body.time - 5) < 0.001);
-        v_crit(r_idx, h_idx) = sim_out.v_body.data(idx(1));
+        idx = find(abs(sim_out.v_body.time - 8) < 0.001);
+        v_crit(h_idx, r_idx) = sim_out.v_body.data(idx(1));
     end
 end
 

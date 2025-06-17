@@ -9,8 +9,8 @@ mu_stick = 0.9;     % stiction coefficient
 mu_slide = 0.8;     % sliding coefficient
 vLimit = 0.01;      % slip-stic transition velocity [m/s]
 
-leg_mu_stick = 0.5; % leg-ground stiction coefficient
-leg_mu_slide = 0.4; % leg-ground sliding coefficient
+leg_mu_stick = 1.0; % leg-ground stiction coefficient
+leg_mu_slide = 0.95; % leg-ground sliding coefficient
 
 %% Ballbot Config
 I_ball = 0.052;     % Ball inertia [kgm^2]
