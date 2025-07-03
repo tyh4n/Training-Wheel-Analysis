@@ -14,7 +14,7 @@ for r_idx = 1 : length(r_ring_arr)
         r_ring = r_ring_arr(r_idx);
         h_leg = h_leg_arr(h_idx);
 
-        accel_time_l = 0;
+        accel_time_l = 1;
         accel_time_r = 7;
         accel_time_m = (accel_time_l + accel_time_r) / 2;
         
@@ -41,12 +41,22 @@ for r_idx = 1 : length(r_ring_arr)
     end
 end
 
+%% Save data
+save("1s7s_025040510_miu1_6x6.mat","r_ring_arr", "h_leg_arr", "v_crit");
+
 %% Plot
 [X,Y] = meshgrid(r_ring_arr, h_leg_arr);
-surf(X, Y, v_crit);
+% surf(X, Y, v_crit);
+colormap(winter);
+[C,h] = contour(X,Y,v_crit);
+clabel(C,h, 'FontSize', 16);
 xlabel("r_{leg} [m]");
 ylabel("h_{leg} [m]");
 zlabel("v_{critical} [m/s]");
-view(-45,45);
-shading interp;
-colorbar;
+% view(-45,45);
+% shading interp;
+% colorbar;
+fontsize(16,"points");
+xlim([0.25, 0.4]);
+ylim([0.05, 0.1]);
+zlim([0, 4]);
