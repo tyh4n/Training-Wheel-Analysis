@@ -1,6 +1,6 @@
 %% Init 
-r_ring_arr = linspace(0.25, 0.4, 6);     % Ring radius [m] 
-h_leg_arr = linspace(0.05, 0.10, 6);      % Leg distance from ground [m]
+r_ring_arr = linspace(0.25, 0.4, 10);     % Ring radius [m] 
+h_leg_arr = linspace(0.05, 0.10, 10);      % Leg distance from ground [m]
 v_crit = zeros(length(h_leg_arr), length(r_ring_arr));
 
 %% Binary Splitting Evaluation
@@ -14,18 +14,18 @@ for r_idx = 1 : length(r_ring_arr)
         r_ring = r_ring_arr(r_idx);
         h_leg = h_leg_arr(h_idx);
 
-        accel_time_l = 1;
-        accel_time_r = 7;
+        accel_time_l = 2;
+        accel_time_r = 6;
         accel_time_m = (accel_time_l + accel_time_r) / 2;
         
         while (accel_time_r - accel_time_l) > 0.2
             accel_time = accel_time_m;
         
-            sim_out = sim('ballbot', 'StopTime', '12');  
+            sim_out = sim('ballbot_isp', 'StopTime', '10');    
             
             tout = sim_out.get('tout');
             % Check if simulation ran to completion
-            if tout(end) < 12
+            if tout(end) < 10
                 disp('Simulation was interrupted!');
                 accel_time_r = accel_time_m;
             else
@@ -36,13 +36,13 @@ for r_idx = 1 : length(r_ring_arr)
             accel_time_m = (accel_time_l + accel_time_r) / 2;
         end
         
-        idx = find(abs(sim_out.v_body.time - 8) < 0.001);
+        idx = find(abs(sim_out.v_body.time - 7) < 0.001);
         v_crit(h_idx, r_idx) = sim_out.v_body.data(idx(1));
     end
 end
 
 %% Save data
-save("1s7s_025040510_miu1_6x6.mat","r_ring_arr", "h_leg_arr", "v_crit");
+save("isp_2s6s_025040510_miu1_10x10.mat","r_ring_arr", "h_leg_arr", "v_crit");
 
 %% Plot
 [X,Y] = meshgrid(r_ring_arr, h_leg_arr);
